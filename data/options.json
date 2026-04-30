@@ -1,0 +1,38 @@
+[
+  {
+    "id": "OPT-L3-SI",
+    "libelle": "Sécurité Informatique",
+    "promotion_parent": "L3",
+    "effectif": 25
+  },
+  {
+    "id": "OPT-L3-IL",
+    "libelle": "Ingénierie Logiciel",
+    "promotion_parent": "L3",
+    "effectif": 30
+  },
+  {
+    "id": "OPT-L3-DS",
+    "libelle": "Data Sciences",
+    "promotion_parent": "L3",
+    "effectif": 25
+  },
+  {
+    "id": "OPT-L4-ROB",
+    "libelle": "Robotique",
+    "promotion_parent": "L4",
+    "effectif": 20
+  },
+  {
+    "id": "OPT-L4-SE",
+    "libelle": "Systèmes Embarqués",
+    "promotion_parent": "L4",
+    "effectif": 22
+  },
+  {
+    "id": "OPT-L4-CLOUD",
+    "libelle": "Cloud Computing",
+    "promotion_parent": "L4",
+    "effectif": 28
+  }
+]

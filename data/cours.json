@@ -1,0 +1,72 @@
+[
+  {
+    "id": "C001",
+    "intitule": "Circuits Logiques",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L1"
+  },
+  {
+    "id": "C002",
+    "intitule": "Réseaux",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L1"
+  },
+  {
+    "id": "C003",
+    "intitule": "Systèmes d'exploitation",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L2"
+  },
+  {
+    "id": "C004",
+    "intitule": "Bases de données",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L2"
+  },
+  {
+    "id": "C005",
+    "intitule": "Programmation Web",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L3"
+  },
+  {
+    "id": "C006",
+    "intitule": "Architecture Logicielle",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L3"
+  },
+  {
+    "id": "C007",
+    "intitule": "Projet Intégrateur",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L4"
+  },
+  {
+    "id": "C008",
+    "intitule": "Séminaire Professionnel",
+    "volume_horaire": 4,
+    "type": "tronc_commun",
+    "promotion": "L4"
+  },
+  {
+    "id": "C009",
+    "intitule": "TP Programmation C",
+    "volume_horaire": 4,
+    "type": "option",
+    "promotion": "L3"
+  },
+  {
+    "id": "C010",
+    "intitule": "TP Programmation Python",
+    "volume_horaire": 4,
+    "type": "option",
+    "promotion": "L3"
+  }
+]
