@@ -1,0 +1,47 @@
+========================================
+RAPPORT D'OCCUPATION DES SALLES
+Généré le : 2026-05-01 02:43:02
+========================================
+
+SALLE : Auditoire principal - Licence 1 (AUD-L1)
+  Capacité : 120 places
+  Créneaux occupés : 2
+  Créneaux libres : 23
+  Taux d'occupation : 8%
+----------------------------------------
+
+SALLE : Auditoire principal - Licence 2 (AUD-L2)
+  Capacité : 100 places
+  Créneaux occupés : 2
+  Créneaux libres : 23
+  Taux d'occupation : 8%
+----------------------------------------
+
+SALLE : Auditoire principal - Licence 3 (AUD-L3)
+  Capacité : 80 places
+  Créneaux occupés : 2
+  Créneaux libres : 23
+  Taux d'occupation : 8%
+----------------------------------------
+
+SALLE : Auditoire principal - Licence 4 (AUD-L4)
+  Capacité : 70 places
+  Créneaux occupés : 2
+  Créneaux libres : 23
+  Taux d'occupation : 8%
+----------------------------------------
+
+SALLE : Salle de machines (TP informatiques) (SALLE-MACH)
+  Capacité : 30 places
+  Créneaux occupés : 2
+  Créneaux libres : 23
+  Taux d'occupation : 8%
+----------------------------------------
+
+SALLE : Salle de management & marketing (SALLE-MGT)
+  Capacité : 50 places
+  Créneaux occupés : 1
+  Créneaux libres : 24
+  Taux d'occupation : 4%
+----------------------------------------
+

@@ -1,0 +1,138 @@
+[
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C001",
+        "groupe": "L1",
+        "effectif": 120,
+        "intitule_cours": "Circuits Logiques"
+    },
+    {
+        "creneau": "Lundi_10:00",
+        "salle": "AUD-L1",
+        "cours": "C002",
+        "groupe": "L1",
+        "effectif": 120,
+        "intitule_cours": "Réseaux"
+    },
+    {
+        "creneau": "Lundi_12:00",
+        "salle": "AUD-L1",
+        "cours": "C003",
+        "groupe": "L1",
+        "effectif": 120,
+        "intitule_cours": "Mathématiques Discrètes"
+    },
+    {
+        "creneau": "Lundi_14:00",
+        "salle": "AUD-L1",
+        "cours": "C004",
+        "groupe": "L1",
+        "effectif": 120,
+        "intitule_cours": "Programmation Java"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L2",
+        "cours": "C005",
+        "groupe": "L2",
+        "effectif": 100,
+        "intitule_cours": "Systèmes d'exploitation"
+    },
+    {
+        "creneau": "Lundi_10:00",
+        "salle": "AUD-L2",
+        "cours": "C006",
+        "groupe": "L2",
+        "effectif": 100,
+        "intitule_cours": "Bases de données"
+    },
+    {
+        "creneau": "Lundi_12:00",
+        "salle": "AUD-L2",
+        "cours": "C007",
+        "groupe": "L2",
+        "effectif": 100,
+        "intitule_cours": "Algorithmique Avancée"
+    },
+    {
+        "creneau": "Lundi_14:00",
+        "salle": "AUD-L2",
+        "cours": "C008",
+        "groupe": "L2",
+        "effectif": 100,
+        "intitule_cours": "Génie Logiciel"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L3",
+        "cours": "C009",
+        "groupe": "L3",
+        "effectif": 80,
+        "intitule_cours": "Programmation Web"
+    },
+    {
+        "creneau": "Lundi_10:00",
+        "salle": "AUD-L3",
+        "cours": "C010",
+        "groupe": "L3",
+        "effectif": 80,
+        "intitule_cours": "Architecture Logicielle"
+    },
+    {
+        "creneau": "Lundi_12:00",
+        "salle": "AUD-L3",
+        "cours": "C011",
+        "groupe": "L3",
+        "effectif": 80,
+        "intitule_cours": "Sécurité Informatique"
+    },
+    {
+        "creneau": "Lundi_14:00",
+        "salle": "AUD-L3",
+        "cours": "C012",
+        "groupe": "L3",
+        "effectif": 80,
+        "intitule_cours": "Réseaux Avancés"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L4",
+        "cours": "C013",
+        "groupe": "L4",
+        "effectif": 70,
+        "intitule_cours": "Projet Intégrateur"
+    },
+    {
+        "creneau": "Lundi_10:00",
+        "salle": "AUD-L4",
+        "cours": "C014",
+        "groupe": "L4",
+        "effectif": 70,
+        "intitule_cours": "Séminaire Professionnel"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "SALLE-MACH",
+        "cours": "C017",
+        "groupe": "OPT-L3-SI",
+        "effectif": 25,
+        "intitule_cours": "Sécurité Informatique"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "SALLE-MGT",
+        "cours": "C017",
+        "groupe": "OPT-L3-IL",
+        "effectif": 30,
+        "intitule_cours": "Ingénierie Logiciel"
+    },
+    {
+        "creneau": "Lundi_10:00",
+        "salle": "SALLE-MACH",
+        "cours": "C017",
+        "groupe": "OPT-L3-DS",
+        "effectif": 25,
+        "intitule_cours": "Data Sciences"
+    }
+]
