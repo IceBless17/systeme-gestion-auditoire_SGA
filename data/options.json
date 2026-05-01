@@ -1,38 +1,44 @@
-[
-  {
-    "id": "OPT-L3-SI",
-    "libelle": "Sécurité Informatique",
-    "promotion_parent": "L3",
-    "effectif": 25
-  },
-  {
-    "id": "OPT-L3-IL",
-    "libelle": "Ingénierie Logiciel",
-    "promotion_parent": "L3",
-    "effectif": 30
-  },
-  {
-    "id": "OPT-L3-DS",
-    "libelle": "Data Sciences",
-    "promotion_parent": "L3",
-    "effectif": 25
-  },
-  {
-    "id": "OPT-L4-ROB",
-    "libelle": "Robotique",
-    "promotion_parent": "L4",
-    "effectif": 20
-  },
-  {
-    "id": "OPT-L4-SE",
-    "libelle": "Systèmes Embarqués",
-    "promotion_parent": "L4",
-    "effectif": 22
-  },
-  {
-    "id": "OPT-L4-CLOUD",
-    "libelle": "Cloud Computing",
-    "promotion_parent": "L4",
-    "effectif": 28
-  }
-]
+{
+    "OPT-L3-SI": {
+        "id": "OPT-L3-SI",
+        "libelle": "Sécurité Informatique",
+        "promotion_parent": "L3",
+        "effectif": 150
+    },
+    "OPT-L3-IL": {
+        "id": "OPT-L3-IL",
+        "libelle": "Ingénierie Logiciel",
+        "promotion_parent": "L3",
+        "effectif": 180
+    },
+    "OPT-L3-DS": {
+        "id": "OPT-L3-DS",
+        "libelle": "Data Sciences",
+        "promotion_parent": "L3",
+        "effectif": 210
+    },
+    "OPT-L4-ROB": {
+        "id": "OPT-L4-ROB",
+        "libelle": "Robotique",
+        "promotion_parent": "L4",
+        "effectif": 80
+    },
+    "OPT-L4-SE": {
+        "id": "OPT-L4-SE",
+        "libelle": "Systèmes Embarqués",
+        "promotion_parent": "L4",
+        "effectif": 57
+    },
+    "OPT-L4-CLOUD": {
+        "id": "OPT-L4-CLOUD",
+        "libelle": "Cloud Computing",
+        "promotion_parent": "L4",
+        "effectif": 63
+    },
+    "OPT-L4-IA": {
+        "id": "OPT-L4-IA",
+        "libelle": "Intelligence Artificielle",
+        "promotion_parent": "L4",
+        "effectif": 120
+    }
+}

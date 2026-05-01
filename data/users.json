@@ -1,0 +1,17 @@
+{
+    "admin": {
+        "username": "admin",
+        "display_name": "Administrateur",
+        "password_hash": "$2y$10$biEA8tjam4ABC6k\/P..poODnTGXzjhhhEPNvo\/DPwaX0TzPPTNGSC",
+        "authenticators": [
+            {
+                "id": "MmK9m5oN-IndDpC6NDU12Q",
+                "name": "Dispositif WebAuthn",
+                "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE5PRCQ\/zL+9qD1DLpVjN+SrfN5xWD\nInxN5bn1kO9a3XsjWYQ1G0qkPsQdYSuWHK7+by\/Oa0GdpxhA2AUI62gYdQ==\n-----END PUBLIC KEY-----\n",
+                "counter": 0,
+                "created_at": "2026-05-01T18:01:29+00:00"
+            }
+        ],
+        "created_at": "2026-05-01T17:59:49+00:00"
+    }
+}

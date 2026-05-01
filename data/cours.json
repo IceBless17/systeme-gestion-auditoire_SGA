@@ -1,128 +1,128 @@
 [
-  {
-    "id": "C001",
-    "intitule": "Circuits Logiques",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L1"
-  },
-  {
-    "id": "C002",
-    "intitule": "Réseaux",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L1"
-  },
-  {
-    "id": "C003",
-    "intitule": "Mathématiques Discrètes",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L1"
-  },
-  {
-    "id": "C004",
-    "intitule": "Programmation Java",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L1"
-  },
-  {
-    "id": "C005",
-    "intitule": "Systèmes d'exploitation",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L2"
-  },
-  {
-    "id": "C006",
-    "intitule": "Bases de données",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L2"
-  },
-  {
-    "id": "C007",
-    "intitule": "Algorithmique Avancée",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L2"
-  },
-  {
-    "id": "C008",
-    "intitule": "Génie Logiciel",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L2"
-  },
-  {
-    "id": "C009",
-    "intitule": "Programmation Web",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L3"
-  },
-  {
-    "id": "C010",
-    "intitule": "Architecture Logicielle",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L3"
-  },
-  {
-    "id": "C011",
-    "intitule": "Sécurité Informatique",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L3"
-  },
-  {
-    "id": "C012",
-    "intitule": "Réseaux Avancés",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L3"
-  },
-  {
-    "id": "C013",
-    "intitule": "Projet Intégrateur",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L4"
-  },
-  {
-    "id": "C014",
-    "intitule": "Séminaire Professionnel",
-    "volume_horaire": 4,
-    "type": "tronc_commun",
-    "promotion": "L4"
-  },
-  {
-    "id": "C015",
-    "intitule": "TP Programmation C",
-    "volume_horaire": 4,
-    "type": "option",
-    "promotion": "L1"
-  },
-  {
-    "id": "C016",
-    "intitule": "TP Base de données",
-    "volume_horaire": 4,
-    "type": "option",
-    "promotion": "L2"
-  },
-  {
-    "id": "C017",
-    "intitule": "TP Programmation Python",
-    "volume_horaire": 4,
-    "type": "option",
-    "promotion": "L3"
-  },
-  {
-    "id": "C018",
-    "intitule": "TP Linux Avancé",
-    "volume_horaire": 4,
-    "type": "option",
-    "promotion": "L3"
-  }
+    {
+        "id": "C001",
+        "intitule": "Circuits Logiques",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L2"
+    },
+    {
+        "id": "C002",
+        "intitule": "Réseaux",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L1"
+    },
+    {
+        "id": "C003",
+        "intitule": "Mathématiques Discrètes",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L1"
+    },
+    {
+        "id": "C004",
+        "intitule": "Programmation Java",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L1"
+    },
+    {
+        "id": "C005",
+        "intitule": "Systèmes d'exploitation",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L2"
+    },
+    {
+        "id": "C006",
+        "intitule": "Bases de données",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L2"
+    },
+    {
+        "id": "C007",
+        "intitule": "Algorithmique Avancée",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L2"
+    },
+    {
+        "id": "C008",
+        "intitule": "Génie Logiciel",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L2"
+    },
+    {
+        "id": "C009",
+        "intitule": "Programmation Web",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L3"
+    },
+    {
+        "id": "C010",
+        "intitule": "Architecture Logicielle",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L3"
+    },
+    {
+        "id": "C011",
+        "intitule": "Sécurité Informatique",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L3"
+    },
+    {
+        "id": "C012",
+        "intitule": "Réseaux Avancés",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L3"
+    },
+    {
+        "id": "C013",
+        "intitule": "Projet Intégrateur",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L4"
+    },
+    {
+        "id": "C014",
+        "intitule": "Séminaire Professionnel",
+        "volume_horaire": 4,
+        "type": "tronc_commun",
+        "promotion": "L4"
+    },
+    {
+        "id": "C015",
+        "intitule": "TP Programmation C",
+        "volume_horaire": 4,
+        "type": "option",
+        "promotion": "L1"
+    },
+    {
+        "id": "C016",
+        "intitule": "TP Base de données",
+        "volume_horaire": 4,
+        "type": "option",
+        "promotion": "L2"
+    },
+    {
+        "id": "C017",
+        "intitule": "TP Programmation Python",
+        "volume_horaire": 4,
+        "type": "option",
+        "promotion": "L3"
+    },
+    {
+        "id": "C018",
+        "intitule": "TP Linux Avancé",
+        "volume_horaire": 4,
+        "type": "option",
+        "promotion": "L3"
+    }
 ]

@@ -1,22 +1,22 @@
 [
-  {
-    "id": "L1",
-    "libelle": "Licence 1",
-    "effectif": 120
-  },
-  {
-    "id": "L2",
-    "libelle": "Licence 2",
-    "effectif": 100
-  },
-  {
-    "id": "L3",
-    "libelle": "Licence 3",
-    "effectif": 80
-  },
-  {
-    "id": "L4",
-    "libelle": "Licence 4",
-    "effectif": 70
-  }
+    {
+        "id": "L1",
+        "libelle": "Licence 1",
+        "effectif": 850
+    },
+    {
+        "id": "L2",
+        "libelle": "Licence 2",
+        "effectif": 760
+    },
+    {
+        "id": "L3",
+        "libelle": "Licence 3",
+        "effectif": 540
+    },
+    {
+        "id": "L4",
+        "libelle": "Licence 4",
+        "effectif": 320
+    }
 ]

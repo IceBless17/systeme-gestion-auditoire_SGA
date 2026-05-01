@@ -19,6 +19,9 @@ define('CONFIG_PATH', ROOT_PATH . '/config');
 // Inclure les fonctions
 require_once CONFIG_PATH . '/functions.php';
 
+// Démarrer la session pour l'authentification
+session_start();
+
 /**
  * Nettoie une valeur utilisateur
  * @param mixed $valeur
@@ -38,6 +41,11 @@ $promotions = [];
 $cours = [];
 $options = [];
 $conflits = [];
+$plannings_archives = [];
+$users = [];
+$pending_user = $_SESSION['pending_user'] ?? null;
+$webauthn_register_needed = $_SESSION['webauthn_register_needed'] ?? false;
+$webauthn_auth_needed = $_SESSION['webauthn_auth_needed'] ?? false;
 
 // ============================================================================
 // TRAITEMENT DES ACTIONS
@@ -52,10 +60,93 @@ try {
     $promotions = charger_promotions(DATA_PATH . '/promotions.json');
     $cours = charger_cours(DATA_PATH . '/cours.json');
     $options = charger_options(DATA_PATH . '/options.json');
-    
+    $users = charger_users(DATA_PATH . '/users.json');
+
+    // Si l'utilisateur n'est pas connecté, forcer la page de connexion
+    if (!isset($_SESSION['user']) && !in_array($action, ['login', 'logout', 'webauthn_register_start', 'webauthn_register_finish', 'webauthn_login_start', 'webauthn_login_finish'])) {
+        $action = 'login';
+    }
+
     // Traitement des formulaires de données
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formType = isset($_POST['form_type']) ? sanitize_input($_POST['form_type']) : '';
+
+        if ($formType === 'login_password') {
+            $username = sanitize_input($_POST['username'] ?? '');
+            $password = $_POST['password'] ?? '';
+
+            if ($username === '' || $password === '') {
+                $erreurs[] = 'Veuillez saisir votre nom d’utilisateur et votre mot de passe.';
+                $action = 'login';
+            } elseif (!verify_user_password($username, $password, $users)) {
+                $erreurs[] = 'Utilisateur ou mot de passe incorrect.';
+                $action = 'login';
+            } else {
+                $user = get_user($username, $users);
+                if ($user === null) {
+                    $erreurs[] = 'Utilisateur introuvable.';
+                    $action = 'login';
+                } elseif (!empty($user['authenticators'])) {
+                    $_SESSION['pending_user'] = $username;
+                    $_SESSION['webauthn_auth_needed'] = true;
+                    $_SESSION['webauthn_register_needed'] = false;
+                    $pending_user = $username;
+                    $webauthn_auth_needed = true;
+                    $action = 'login';
+                    $messages[] = '✅ Mot de passe validé. Veuillez terminer la connexion avec votre dispositif WebAuthn.';
+                } else {
+                    $_SESSION['pending_user'] = $username;
+                    $_SESSION['webauthn_register_needed'] = true;
+                    $_SESSION['webauthn_auth_needed'] = false;
+                    $pending_user = $username;
+                    $webauthn_register_needed = true;
+                    $action = 'login';
+                    $messages[] = '✅ Mot de passe validé. Enregistrez un dispositif WebAuthn pour activer la double authentification.';
+                }
+            }
+        } elseif ($action === 'logout') {
+            session_destroy();
+            session_start();
+            $messages[] = '✅ Vous êtes déconnecté.';
+            $action = 'login';
+        } elseif ($action === 'webauthn_register_finish' || $action === 'webauthn_login_finish') {
+            header('Content-Type: application/json');
+            $input = json_decode(file_get_contents('php://input'), true);
+            $username = $_SESSION['pending_user'] ?? $_SESSION['user'] ?? null;
+
+            try {
+                if (!$username) {
+                    throw new Exception('Utilisateur manquant pour WebAuthn.');
+                }
+
+                if ($action === 'webauthn_register_finish') {
+                    $authenticator = webauthn_verify_registration_response($input, $username);
+                    $users[$username]['authenticators'][] = $authenticator;
+                    sauvegarder_users($users, DATA_PATH . '/users.json');
+                    $_SESSION['user'] = $username;
+                    unset($_SESSION['pending_user'], $_SESSION['webauthn_auth_needed'], $_SESSION['webauthn_register_needed'], $_SESSION['webauthn_reg_challenge'], $_SESSION['webauthn_challenge_user']);
+                    echo json_encode(['success' => true]);
+                    exit;
+                }
+
+                if ($action === 'webauthn_login_finish') {
+                    if (webauthn_verify_authentication_response($input, $username, $users)) {
+                        sauvegarder_users($users, DATA_PATH . '/users.json');
+                        $_SESSION['user'] = $username;
+                        unset($_SESSION['pending_user'], $_SESSION['webauthn_auth_needed'], $_SESSION['webauthn_register_needed'], $_SESSION['webauthn_auth_challenge'], $_SESSION['webauthn_challenge_user']);
+                        echo json_encode(['success' => true]);
+                        exit;
+                    }
+                }
+            } catch (Exception $e) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+                exit;
+            }
+        } elseif (!isset($_SESSION['user'])) {
+            $erreurs[] = 'Authentification requise.';
+            $action = 'login';
+        }
 
         if ($formType === 'add_salle') {
             $nouvelleSalle = [
@@ -268,29 +359,120 @@ try {
         }
     }
 
+    if ($action === 'webauthn_register_start' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        header('Content-Type: application/json');
+        $username = $_SESSION['user'] ?? $_SESSION['pending_user'] ?? null;
+        if (!$username) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Authentification requise.']);
+            exit;
+        }
+
+        $user = get_user($username, $users);
+        echo json_encode(webauthn_registration_options($username, $user));
+        exit;
+    }
+
+    if ($action === 'webauthn_login_start' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        header('Content-Type: application/json');
+        $username = $_SESSION['pending_user'] ?? null;
+        if (!$username) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Authentification requise.']);
+            exit;
+        }
+
+        $user = get_user($username, $users);
+        echo json_encode(webauthn_authentication_options($username, $user));
+        exit;
+    }
+
+    if ($action === 'logout' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+        session_destroy();
+        session_start();
+        $messages[] = '✅ Vous êtes déconnecté.';
+        $action = 'login';
+    }
+
     switch ($action) {
         case 'generer':
-            // Générer le planning
-            $creneaux = generer_creneaux();
-            $planning = generer_planning($salles, $promotions, $cours, $options, $creneaux);
+            // Archiver le planning existant avant d'en créer un nouveau
+            $archive_path = DATA_PATH . '/archives';
+            if (archiver_planning(DATA_PATH . '/planning.json', $archive_path)) {
+                $messages[] = "✓ Planning précédent archivé avec succès.";
+            }
             
-            // Sauvegarder
-            if (sauvegarder_planning($planning, DATA_PATH . '/planning.json')) {
-                $messages[] = "✓ Planning généré et sauvegardé avec succès !";
-                $messages[] = count($planning) . " affectations créées.";
+            // Générer le nouveau planning
+            $creneaux = generer_creneaux();
+            $result = generer_planning($salles, $promotions, $cours, $options, $creneaux);
+            $planning = $result['planning'];
+            $warnings = $result['warnings'];
+            
+            // Afficher les résultats
+            if (!empty($planning)) {
+                $messages[] = "✅ Planning généré avec succès !";
+                $messages[] = "📊 " . $result['total_creneaux'] . " affectations créées couvrant " . $result['jours_couverts'] . " jours.";
             } else {
+                $erreurs[] = "❌ Aucune affectation n'a pu être créée. Vérifiez les effectifs et capacités.";
+            }
+            
+            // Afficher les warnings
+            if (!empty($warnings)) {
+                foreach ($warnings as $warning) {
+                    $erreurs[] = $warning;
+                }
+            }
+            
+            // Sauvegarder le planning généré
+            if (!empty($planning) && sauvegarder_planning($planning, DATA_PATH . '/planning.json')) {
+                $messages[] = "✓ Planning sauvegardé en tant que version actuelle.";
+            } elseif (!empty($planning)) {
                 $erreurs[] = "✗ Erreur lors de la sauvegarde du planning.";
             }
             
             $action = 'afficher'; // Afficher après génération
-            $planning = charger_planning(DATA_PATH . '/planning.json');
+            if (file_exists(DATA_PATH . '/planning.json')) {
+                $planning = charger_planning(DATA_PATH . '/planning.json');
+            }
+            break;
+            
+        case 'archives':
+            // Afficher les plannings archivés
+            $archive_path = DATA_PATH . '/archives';
+            $plannings_archives = lister_plannings_archives($archive_path);
+            
+            // Traiter les actions sur les archives
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $action_archive = isset($_POST['action_archive']) ? sanitize_input($_POST['action_archive']) : '';
+                $nom_fichier = isset($_POST['nom_fichier']) ? sanitize_input($_POST['nom_fichier']) : '';
+                
+                if ($action_archive === 'restaurer' && $nom_fichier) {
+                    try {
+                        restaurer_planning($archive_path, $nom_fichier, DATA_PATH . '/planning.json');
+                        $messages[] = "✅ Planning restauré avec succès : " . $nom_fichier;
+                        $planning = charger_planning(DATA_PATH . '/planning.json');
+                        $plannings_archives = lister_plannings_archives($archive_path);
+                    } catch (Exception $e) {
+                        $erreurs[] = "❌ Erreur : " . $e->getMessage();
+                    }
+                } elseif ($action_archive === 'supprimer' && $nom_fichier) {
+                    if (supprimer_planning_archive($archive_path, $nom_fichier)) {
+                        $messages[] = "✅ Planning supprimé : " . $nom_fichier;
+                        $plannings_archives = lister_plannings_archives($archive_path);
+                    } else {
+                        $erreurs[] = "❌ Erreur lors de la suppression du planning";
+                    }
+                }
+            }
             break;
             
         case 'afficher':
             // Charger et afficher le planning existant
             if (file_exists(DATA_PATH . '/planning.json')) {
                 $planning = charger_planning(DATA_PATH . '/planning.json');
-                $messages[] = "Planning chargé : " . count($planning) . " affectations.";
+                if (empty($messages)) { // Ne pas afficher le message s'il y en a déjà
+                    $messages[] = "📅 Planning chargé : " . count($planning) . " affectations.";
+                }
             } else {
                 $erreurs[] = "⚠ Aucun planning généré. Veuillez d'abord générer le planning.";
             }
@@ -332,6 +514,13 @@ try {
             }
             break;
             
+        case 'salles':
+        case 'promotions':
+        case 'cours':
+        case 'options':
+            // Sections de gestion - pas de message auto
+            break;
+            
         case 'dashboard':
         default:
             // Page d'accueil - dashboard
@@ -340,7 +529,7 @@ try {
                 $rapport_occupation = rapport_occupation_salles($planning, $salles);
                 $conflits = detecter_conflits($planning);
                 
-                $messages[] = "Dashboard chargé avec succès.";
+                $messages[] = "📊 Dashboard : système opérationnel.";
                 if (!empty($conflits)) {
                     $erreurs[] = "⚠ " . count($conflits) . " conflit(s) détecté(s) dans le planning";
                 }
@@ -373,33 +562,48 @@ try {
                     <p>Système de Gestion des Auditoires</p>
                 </div>
                 <nav class="nav">
-                    <a href="?action=dashboard" class="nav-link <?php echo $action === 'dashboard' ? 'active' : ''; ?>">
-                        📊 Dashboard
-                    </a>
-                    <a href="?action=salles" class="nav-link <?php echo $action === 'salles' ? 'active' : ''; ?>">
-                        🏢 Salles
-                    </a>
-                    <a href="?action=promotions" class="nav-link <?php echo $action === 'promotions' ? 'active' : ''; ?>">
-                        👥 Promotions
-                    </a>
-                    <a href="?action=cours" class="nav-link <?php echo $action === 'cours' ? 'active' : ''; ?>">
-                        📖 Cours
-                    </a>
-                    <a href="?action=options" class="nav-link <?php echo $action === 'options' ? 'active' : ''; ?>">
-                        🎯 Options
-                    </a>
-                    <a href="?action=generer" class="nav-link <?php echo $action === 'generer' ? 'active' : ''; ?>">
-                        ⚙️ Générer Planning
-                    </a>
-                    <a href="?action=afficher" class="nav-link <?php echo $action === 'afficher' ? 'active' : ''; ?>">
-                        📅 Planning
-                    </a>
-                    <a href="?action=rapport" class="nav-link <?php echo $action === 'rapport' ? 'active' : ''; ?>">
-                        📈 Rapports
-                    </a>
-                    <a href="?action=conflits" class="nav-link <?php echo $action === 'conflits' ? 'active' : ''; ?>">
-                        ⚠️ Conflits
-                    </a>
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <a href="?action=dashboard" class="nav-link <?php echo $action === 'dashboard' ? 'active' : ''; ?>">
+                            📊 Dashboard
+                        </a>
+                        <a href="?action=salles" class="nav-link <?php echo $action === 'salles' ? 'active' : ''; ?>">
+                            🏢 Salles
+                        </a>
+                        <a href="?action=promotions" class="nav-link <?php echo $action === 'promotions' ? 'active' : ''; ?>">
+                            👥 Promotions
+                        </a>
+                        <a href="?action=cours" class="nav-link <?php echo $action === 'cours' ? 'active' : ''; ?>">
+                            📖 Cours
+                        </a>
+                        <a href="?action=options" class="nav-link <?php echo $action === 'options' ? 'active' : ''; ?>">
+                            🎯 Options
+                        </a>
+                        <a href="?action=generer" class="nav-link <?php echo $action === 'generer' ? 'active' : ''; ?>">
+                            ⚙️ Générer Planning
+                        </a>
+                        <a href="?action=afficher" class="nav-link <?php echo $action === 'afficher' ? 'active' : ''; ?>">
+                            📅 Planning
+                        </a>
+                        <a href="?action=rapport" class="nav-link <?php echo $action === 'rapport' ? 'active' : ''; ?>">
+                            📈 Rapports
+                        </a>
+                        <a href="?action=conflits" class="nav-link <?php echo $action === 'conflits' ? 'active' : ''; ?>">
+                            ⚠️ Conflits
+                        </a>
+                        <a href="?action=archives" class="nav-link <?php echo $action === 'archives' ? 'active' : ''; ?>">
+                            📦 Archives
+                        </a>
+                        <a href="?action=settings" class="nav-link <?php echo $action === 'settings' ? 'active' : ''; ?>">
+                            👤 Mon compte
+                        </a>
+                        <a href="?action=logout" class="nav-link">
+                            🚪 Déconnexion
+                        </a>
+                    <?php else: ?>
+                        <a href="?action=login" class="nav-link <?php echo $action === 'login' ? 'active' : ''; ?>">
+                            🔐 Connexion
+                        </a>
+                    <?php endif; ?>
                 </nav>
             </div>
         </header>
@@ -516,6 +720,65 @@ try {
                     </div>
                 </section>
                 <?php endif; ?>
+
+            <?php elseif ($action === 'salles'): ?>
+            <?php elseif ($action === 'login'): ?>
+                <section class="section login-section">
+                    <h2>🔐 Connexion Administrateur</h2>
+
+                    <?php if (!$pending_user): ?>
+                        <form method="POST" action="?action=login" class="form-card">
+                            <input type="hidden" name="form_type" value="login_password">
+
+                            <label>Nom d'utilisateur
+                                <input type="text" name="username" required>
+                            </label>
+
+                            <label>Mot de passe
+                                <input type="password" name="password" required>
+                            </label>
+
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </form>
+
+                        <p style="margin-top: 1rem;">Compte par défaut : <strong>admin</strong> / <strong>admin123</strong></p>
+                    <?php else: ?>
+                        <div class="info-card">
+                            <p>Bonjour <strong><?php echo htmlspecialchars($pending_user); ?></strong>.</p>
+                            <?php if ($webauthn_auth_needed): ?>
+                                <p>Veuillez valider la deuxième étape de la connexion avec votre dispositif WebAuthn.</p>
+                                <button id="webauthn-login-button" class="btn btn-primary">Se connecter avec WebAuthn</button>
+                            <?php else: ?>
+                                <p>Enregistrez un dispositif WebAuthn pour activer la double authentification.</p>
+                                <button id="webauthn-register-button" class="btn btn-primary">Enregistrer un dispositif WebAuthn</button>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </section>
+
+            <?php elseif ($action === 'settings'): ?>
+                <section class="section">
+                    <h2>👤 Paramètres du compte</h2>
+
+                    <p>Utilisateur connecté : <strong><?php echo htmlspecialchars($_SESSION['user']); ?></strong></p>
+
+                    <div class="section-block">
+                        <h3>Dispositifs WebAuthn enregistrés</h3>
+                        <?php if (!empty($users[$_SESSION['user']]['authenticators'])): ?>
+                            <ul class="list">
+                                <?php foreach ($users[$_SESSION['user']]['authenticators'] as $auth): ?>
+                                    <li>
+                                        <?php echo htmlspecialchars($auth['name']); ?> - enregistré le <?php echo htmlspecialchars($auth['created_at']); ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p>Aucun dispositif WebAuthn n'est encore enregistré.</p>
+                        <?php endif; ?>
+
+                        <button id="webauthn-register-button" class="btn btn-primary">Enregistrer un nouveau dispositif</button>
+                    </div>
+                </section>
 
             <?php elseif ($action === 'salles'): ?>
                 <!-- GESTION DES SALLES -->
@@ -897,6 +1160,57 @@ try {
                     </div>
                 </section>
 
+            <?php elseif ($action === 'archives'): ?>
+                <!-- ARCHIVES DES PLANNINGS -->
+                <section class="section">
+                    <h2>📦 Archives des Plannings</h2>
+                    
+                    <?php if (empty($plannings_archives)): ?>
+                        <div class="alert alert-info">
+                            <p>Aucun planning archivé. Les plannings seront archivés automatiquement lors de la génération de nouveaux plannings.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Affectations</th>
+                                        <th>Taille</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($plannings_archives as $archive): ?>
+                                        <tr>
+                                            <td>
+                                                <strong><?php echo htmlspecialchars($archive['date_lisible']); ?></strong>
+                                                <br><small style="color: #999;"><?php echo htmlspecialchars($archive['fichier']); ?></small>
+                                            </td>
+                                            <td><?php echo $archive['affectations']; ?> affectations</td>
+                                            <td><?php echo round($archive['taille'] / 1024, 2); ?> KB</td>
+                                            <td>
+                                                <form method="POST" action="?action=archives" style="display: inline;">
+                                                    <input type="hidden" name="nom_fichier" value="<?php echo htmlspecialchars($archive['fichier']); ?>">
+                                                    <button type="submit" name="action_archive" value="restaurer" class="btn btn-secondary" onclick="return confirm('Restaurer ce planning ? Le planning actuel sera archivé.')">
+                                                        ↩️ Restaurer
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="?action=archives" style="display: inline;">
+                                                    <input type="hidden" name="nom_fichier" value="<?php echo htmlspecialchars($archive['fichier']); ?>">
+                                                    <button type="submit" name="action_archive" value="supprimer" class="btn btn-danger" onclick="return confirm('Supprimer définitivement ce planning ?')">
+                                                        🗑️ Supprimer
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </section>
+
             <?php else: ?>
                 <!-- PAGE PAR DÉFAUT -->
                 <section class="section">
@@ -913,6 +1227,117 @@ try {
         </footer>
     </div>
 
+    <script>
+        function base64UrlToBuffer(base64url) {
+            const padding = '='.repeat((4 - (base64url.length % 4)) % 4);
+            const base64 = (base64url + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const raw = atob(base64);
+            const buffer = new Uint8Array(raw.length);
+            for (let i = 0; i < raw.length; ++i) {
+                buffer[i] = raw.charCodeAt(i);
+            }
+            return buffer.buffer;
+        }
+
+        function bufferToBase64Url(buffer) {
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function preparePublicKeyOptions(options) {
+            if (!options || !options.publicKey) {
+                throw new Error('Options WebAuthn invalides');
+            }
+
+            options.publicKey.challenge = base64UrlToBuffer(options.publicKey.challenge);
+            if (options.publicKey.user && options.publicKey.user.id) {
+                options.publicKey.user.id = base64UrlToBuffer(options.publicKey.user.id);
+            }
+            if (options.publicKey.allowCredentials) {
+                options.publicKey.allowCredentials = options.publicKey.allowCredentials.map(item => ({
+                    type: item.type,
+                    id: base64UrlToBuffer(item.id)
+                }));
+            }
+            return options;
+        }
+
+        async function sendWebAuthnResponse(endpoint, credential) {
+            const data = {
+                id: credential.id,
+                rawId: bufferToBase64Url(credential.rawId),
+                type: credential.type,
+                response: {
+                    clientDataJSON: bufferToBase64Url(credential.response.clientDataJSON)
+                }
+            };
+
+            if (credential.response.attestationObject) {
+                data.response.attestationObject = bufferToBase64Url(credential.response.attestationObject);
+            }
+            if (credential.response.authenticatorData) {
+                data.response.authenticatorData = bufferToBase64Url(credential.response.authenticatorData);
+            }
+            if (credential.response.signature) {
+                data.response.signature = bufferToBase64Url(credential.response.signature);
+            }
+            if (credential.response.userHandle) {
+                data.response.userHandle = bufferToBase64Url(credential.response.userHandle);
+            }
+
+            const result = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            });
+            return result.json();
+        }
+
+        async function startWebAuthnFlow(startUrl, finishUrl) {
+            if (!window.PublicKeyCredential) {
+                alert('WebAuthn n\'est pas pris en charge par ce navigateur.');
+                return;
+            }
+
+            const response = await fetch(startUrl, {credentials: 'same-origin'});
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.error || 'Impossible de démarrer WebAuthn.');
+                return;
+            }
+
+            const options = await response.json();
+            const publicKey = preparePublicKeyOptions(options);
+            const credential = await navigator.credentials[finishUrl === '?action=webauthn_register_finish' ? 'create' : 'get'](publicKey);
+            const result = await sendWebAuthnResponse(finishUrl, credential);
+            if (result.success) {
+                window.location.href = '?action=dashboard';
+            } else {
+                alert(result.error || 'Échec de l’authentification WebAuthn.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const registerButton = document.getElementById('webauthn-register-button');
+            if (registerButton) {
+                registerButton.addEventListener('click', function () {
+                    startWebAuthnFlow('?action=webauthn_register_start', '?action=webauthn_register_finish');
+                });
+            }
+
+            const loginButton = document.getElementById('webauthn-login-button');
+            if (loginButton) {
+                loginButton.addEventListener('click', function () {
+                    startWebAuthnFlow('?action=webauthn_login_start', '?action=webauthn_login_finish');
+                });
+            }
+        });
+    </script>
     <script src="assets/js/script.js"></script>
 </body>
 </html>
