@@ -1,0 +1,90 @@
+[
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C001",
+        "groupe": "L1",
+        "effectif": 114,
+        "intitule_cours": "Circuits Logiques"
+    },
+    {
+        "creneau": "Lundi_12:00",
+        "salle": "AUD-L1",
+        "cours": "C002",
+        "groupe": "L1",
+        "effectif": 114,
+        "intitule_cours": "Réseaux"
+    },
+    {
+        "creneau": "Mardi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C003",
+        "groupe": "L2",
+        "effectif": 100,
+        "intitule_cours": "Systèmes d'exploitation"
+    },
+    {
+        "creneau": "Mardi_12:00",
+        "salle": "AUD-L1",
+        "cours": "C004",
+        "groupe": "L2",
+        "effectif": 100,
+        "intitule_cours": "Bases de données"
+    },
+    {
+        "creneau": "Mercredi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C005",
+        "groupe": "L3",
+        "effectif": 80,
+        "intitule_cours": "Programmation Web"
+    },
+    {
+        "creneau": "Mercredi_12:00",
+        "salle": "AUD-L1",
+        "cours": "C006",
+        "groupe": "L3",
+        "effectif": 80,
+        "intitule_cours": "Architecture Logicielle"
+    },
+    {
+        "creneau": "Jeudi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C007",
+        "groupe": "L4",
+        "effectif": 70,
+        "intitule_cours": "Projet Intégrateur"
+    },
+    {
+        "creneau": "Jeudi_12:00",
+        "salle": "AUD-L1",
+        "cours": "C008",
+        "groupe": "L4",
+        "effectif": 70,
+        "intitule_cours": "Séminaire Professionnel"
+    },
+    {
+        "creneau": "Vendredi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C009",
+        "groupe": "OPT-L3-SI",
+        "effectif": 25,
+        "intitule_cours": "Sécurité Informatique"
+    },
+    {
+        "creneau": "Vendredi_12:00",
+        "salle": "AUD-L1",
+        "cours": "C009",
+        "groupe": "OPT-L3-IL",
+        "effectif": 30,
+        "intitule_cours": "Ingénierie Logiciel"
+    },
+    {
+        "creneau": "Samedi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C009",
+        "groupe": "OPT-L3-DS",
+        "effectif": 25,
+        "intitule_cours": "Data Sciences"
+    }
+]
