@@ -685,19 +685,29 @@ function capacite_suffisante($salles, $id_salle, $effectif) {
  * @return string|null ID de salle ou null
  */
 function trouver_salle_disponible($salles, $planning, $creneau, $effectif) {
-    // Trier les salles par capacité croissante pour utiliser d'abord les plus petites salles adaptées
-    $salles_triees = $salles;
-    uasort($salles_triees, function ($a, $b) {
-        return $a['capacite'] <=> $b['capacite'];
-    });
-
-    foreach ($salles_triees as $id_salle => $salle) {
+    // Collecter toutes les salles suffisantes et disponibles
+    $salles_candidates = [];
+    foreach ($salles as $id_salle => $salle) {
         if (salle_disponible($planning, $id_salle, $creneau) && capacite_suffisante($salles, $id_salle, $effectif)) {
-            return $id_salle;
+            $salles_candidates[] = $id_salle;
         }
     }
 
-    return null;
+    if (empty($salles_candidates)) {
+        return null;
+    }
+
+    // Compter combien de fois chaque salle candidate est déjà utilisée dans le planning
+    $usage = array_fill_keys($salles_candidates, 0);
+    foreach ($planning as $aff) {
+        if (isset($usage[$aff['salle']])) {
+            $usage[$aff['salle']]++;
+        }
+    }
+
+    // Retourner la salle candidate la moins utilisée (équilibrage)
+    asort($usage);
+    return array_key_first($usage);
 }
 
 /**
@@ -782,15 +792,16 @@ function generer_planning($salles, $promotions, $cours, $options, $creneaux_disp
     }
     
     // Trier les cours par priorité : tronc commun d'abord, puis options
+    // Mélanger aléatoirement à l'intérieur de chaque groupe pour varier le planning
     usort($cours_a_planifier, function ($a, $b) {
         if ($a['type'] === $b['type']) {
-            return strcmp($a['id'], $b['id']);
+            return rand(-1, 1);
         }
         return $a['type'] === 'tronc_commun' ? -1 : 1;
     });
     
     $total_creneaux = count($creneaux_disponibles);
-    $slot_depart = 0;
+    $slot_depart = rand(0, $total_creneaux - 1);
     
     foreach ($cours_a_planifier as $cours_item) {
         $id_cours = $cours_item['id'];

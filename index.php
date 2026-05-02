@@ -721,7 +721,6 @@ try {
                 </section>
                 <?php endif; ?>
 
-            <?php elseif ($action === 'salles'): ?>
             <?php elseif ($action === 'login'): ?>
                 <section class="section login-section">
                     <h2>🔐 Connexion Administrateur</h2>
