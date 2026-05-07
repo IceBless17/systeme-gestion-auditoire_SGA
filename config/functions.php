@@ -463,11 +463,23 @@ function webauthn_verify_authentication_response($response, $username, &$users) 
     }
 
     $signCount = unpack('N', substr($authenticatorData, 33, 4))[1];
-    if ($signCount <= $storedAuthenticator['counter']) {
+
+    /**
+    * Certains authenticators retournent toujours 0.
+    * On ne vérifie le compteur QUE si les deux valeurs sont > 0.
+    */
+    if (
+        $signCount > 0 &&
+        $storedAuthenticator['counter'] > 0 &&
+        $signCount <= $storedAuthenticator['counter']
+    ) {
         throw new Exception('Incrémentation de compteur WebAuthn invalide.');
     }
 
-    $users[$username]['authenticators'][$authenticatorIndex]['counter'] = $signCount;
+    // Mise à jour du compteur uniquement si > 0
+    if ($signCount > 0) {
+        $users[$username]['authenticators'][$authenticatorIndex]['counter'] = $signCount;
+    }
     return true;
 }
 

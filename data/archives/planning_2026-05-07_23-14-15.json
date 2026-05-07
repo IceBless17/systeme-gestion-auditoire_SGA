@@ -1,0 +1,170 @@
+[
+    {
+        "creneau": "Jeudi_13:00",
+        "salle": "AUD-L1",
+        "cours": "C003",
+        "groupe": "L1",
+        "effectif": 850,
+        "intitule_cours": "Mathématiques Discrètes"
+    },
+    {
+        "creneau": "Vendredi_08:00",
+        "salle": "AUD-L2",
+        "cours": "C007",
+        "groupe": "L2",
+        "effectif": 760,
+        "intitule_cours": "Algorithmique Avancée"
+    },
+    {
+        "creneau": "Vendredi_13:00",
+        "salle": "AUD-L3",
+        "cours": "C009",
+        "groupe": "L3",
+        "effectif": 540,
+        "intitule_cours": "Programmation Web"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C011",
+        "groupe": "L3",
+        "effectif": 540,
+        "intitule_cours": "Sécurité Informatique"
+    },
+    {
+        "creneau": "Lundi_13:00",
+        "salle": "AUD-L2",
+        "cours": "C008",
+        "groupe": "L2",
+        "effectif": 760,
+        "intitule_cours": "Génie Logiciel"
+    },
+    {
+        "creneau": "Mardi_08:00",
+        "salle": "AUD-L3",
+        "cours": "C010",
+        "groupe": "L3",
+        "effectif": 540,
+        "intitule_cours": "Architecture Logicielle"
+    },
+    {
+        "creneau": "Mardi_13:00",
+        "salle": "AUD-L1",
+        "cours": "C001",
+        "groupe": "L2",
+        "effectif": 760,
+        "intitule_cours": "Circuits Logiques"
+    },
+    {
+        "creneau": "Mercredi_08:00",
+        "salle": "AUD-L2",
+        "cours": "C004",
+        "groupe": "L1",
+        "effectif": 850,
+        "intitule_cours": "Programmation Java"
+    },
+    {
+        "creneau": "Mercredi_13:00",
+        "salle": "AUD-L1",
+        "cours": "C005",
+        "groupe": "L2",
+        "effectif": 760,
+        "intitule_cours": "Systèmes d'exploitation"
+    },
+    {
+        "creneau": "Jeudi_08:00",
+        "salle": "AUD-L2",
+        "cours": "C006",
+        "groupe": "L2",
+        "effectif": 760,
+        "intitule_cours": "Bases de données"
+    },
+    {
+        "creneau": "Jeudi_13:00",
+        "salle": "AUD-L3",
+        "cours": "C012",
+        "groupe": "L3",
+        "effectif": 540,
+        "intitule_cours": "Réseaux Avancés"
+    },
+    {
+        "creneau": "Vendredi_08:00",
+        "salle": "AUD-L1",
+        "cours": "C002",
+        "groupe": "L1",
+        "effectif": 850,
+        "intitule_cours": "Réseaux"
+    },
+    {
+        "creneau": "Vendredi_13:00",
+        "salle": "AUD-L4",
+        "cours": "C013",
+        "groupe": "L4",
+        "effectif": 320,
+        "intitule_cours": "Projet Intégrateur"
+    },
+    {
+        "creneau": "Lundi_08:00",
+        "salle": "AUD-L4",
+        "cours": "C014",
+        "groupe": "L4",
+        "effectif": 320,
+        "intitule_cours": "Séminaire Professionnel"
+    },
+    {
+        "creneau": "Lundi_13:00",
+        "salle": "SALLE-MGT",
+        "cours": "OPT_OPT-L3-SI",
+        "groupe": "OPT-L3-SI",
+        "effectif": 150,
+        "intitule_cours": "Sécurité Informatique"
+    },
+    {
+        "creneau": "Mardi_08:00",
+        "salle": "SALLE-MACH",
+        "cours": "OPT_OPT-L4-SE",
+        "groupe": "OPT-L4-SE",
+        "effectif": 57,
+        "intitule_cours": "Systèmes Embarqués"
+    },
+    {
+        "creneau": "Mardi_13:00",
+        "salle": "AUD-L4",
+        "cours": "OPT_OPT-L3-DS",
+        "groupe": "OPT-L3-DS",
+        "effectif": 210,
+        "intitule_cours": "Data Sciences"
+    },
+    {
+        "creneau": "Mercredi_08:00",
+        "salle": "AUD-L3",
+        "cours": "OPT_OPT-L3-IL",
+        "groupe": "OPT-L3-IL",
+        "effectif": 180,
+        "intitule_cours": "Ingénierie Logiciel"
+    },
+    {
+        "creneau": "Mercredi_13:00",
+        "salle": "SALLE-MACH",
+        "cours": "OPT_OPT-L4-ROB",
+        "groupe": "OPT-L4-ROB",
+        "effectif": 80,
+        "intitule_cours": "Robotique"
+    },
+    {
+        "creneau": "Jeudi_08:00",
+        "salle": "SALLE-MGT",
+        "cours": "OPT_OPT-L4-CLOUD",
+        "groupe": "OPT-L4-CLOUD",
+        "effectif": 63,
+        "intitule_cours": "Cloud Computing"
+    },
+    {
+        "creneau": "Jeudi_13:00",
+        "salle": "SALLE-MGT",
+        "cours": "OPT_OPT-L4-IA",
+        "groupe": "OPT-L4-IA",
+        "effectif": 120,
+        "intitule_cours": "Intelligence Artificielle"
+    }
+]
